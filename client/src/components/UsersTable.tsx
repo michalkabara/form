@@ -1,19 +1,19 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { User } from "../types";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { fetchUsers, removeUser } from "../utils";
 
 export const UsersTable = () => {
-  const fetchUsers = async () => {
-    try {
-      const response = await fetch("http://localhost:8080/api/form");
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const queryClient = useQueryClient();
 
   const { data } = useQuery({ queryKey: ["users"], queryFn: fetchUsers });
-  console.log(data);
+
+  const { mutate: handleRemoveUser } = useMutation({
+    mutationFn: (id: number) => removeUser(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["users"]);
+    },
+  });
 
   return (
     <div
@@ -37,6 +37,11 @@ export const UsersTable = () => {
               <td>{user.firstName}</td>
               <td>{user.lastName}</td>
               <td>{user.dateOfBirth}</td>
+              <td>
+                <button className="p-2 border rounded-md" onClick={() => handleRemoveUser(user.id)}>
+                  <FaRegTrashAlt className="text-red-600" />
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

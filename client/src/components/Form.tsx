@@ -24,11 +24,10 @@ export const Form = () => {
 
   const { data } = useQuery({ queryKey: ["continents"], queryFn: fetchContinents });
 
-  const { mutate: addUser } = useMutation({
+  const { mutate: handleAddUser } = useMutation({
     mutationFn: (user: User) => updateData(user),
-    onSuccess: (data) => {
+    onSuccess: () => {
       queryClient.invalidateQueries(["users"]);
-      // console.log(data);
     },
   });
 
@@ -41,9 +40,8 @@ export const Form = () => {
     },
     validate,
     onSubmit: (values: User) => {
-      console.log(values);
-      // addUser(values);
-      // alert("Sukces");
+      handleAddUser(values);
+      alert("Sukces");
     },
   });
 
@@ -81,7 +79,7 @@ export const Form = () => {
       <button
         disabled={formikDate > date}
         type="submit"
-        className="mt-4 bg-cyan-500 text-white p-3 rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed"
+        className="mt-4 bg-cyan-500 hover:bg-cyan-400 transition-colors text-white p-3 rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed"
       >
         Wyślij
       </button>
