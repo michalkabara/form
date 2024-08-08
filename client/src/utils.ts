@@ -1,4 +1,6 @@
-export const updateData = async (payload) => {
+import { UserWithoutId } from "./types";
+
+export const updateData = async (payload: UserWithoutId) => {
   try {
     const response = await fetch("http://localhost:8080/api/form", {
       method: "POST",
@@ -6,7 +8,6 @@ export const updateData = async (payload) => {
       body: JSON.stringify(payload),
     });
     const data = await response.json();
-    console.log(response);
     return data;
   } catch (error) {
     console.log(error);

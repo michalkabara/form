@@ -11,7 +11,7 @@ export const UsersTable = () => {
   const { mutate: handleRemoveUser } = useMutation({
     mutationFn: (id: number) => removeUser(id),
     onSuccess: () => {
-      queryClient.invalidateQueries(["users"]);
+      queryClient.invalidateQueries({ queryKey: ["users"] });
     },
   });
 

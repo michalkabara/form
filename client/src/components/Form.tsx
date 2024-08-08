@@ -1,12 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useFormik } from "formik";
-import { User } from "../types";
+import { UserWithoutId } from "../types";
 import { updateData, fetchContinents } from "../utils";
 
 const date = new Date().getTime();
+const currentYear = new Date().getFullYear();
+const body = document.querySelector("body");
 
-const validate = (values) => {
-  const errors = {};
+const validate = (values: UserWithoutId) => {
+  const errors: { firstName?: string; lastName?: string } = {};
 
   if (!values.firstName) {
     errors.firstName = "To pole jest wymagane";
@@ -25,9 +27,9 @@ export const Form = () => {
   const { data } = useQuery({ queryKey: ["continents"], queryFn: fetchContinents });
 
   const { mutate: handleAddUser } = useMutation({
-    mutationFn: (user: User) => updateData(user),
+    mutationFn: (user: UserWithoutId) => updateData(user),
     onSuccess: () => {
-      queryClient.invalidateQueries(["users"]);
+      queryClient.invalidateQueries({ queryKey: ["users"] });
     },
   });
 
@@ -39,13 +41,18 @@ export const Form = () => {
       dateOfBirth: "",
     },
     validate,
-    onSubmit: (values: User) => {
+    onSubmit: (values: UserWithoutId) => {
       handleAddUser(values);
       alert("Sukces");
     },
   });
 
   const formikDate = new Date(formik.values.dateOfBirth).getTime();
+  const formikYear = new Date(formik.values.dateOfBirth).getFullYear();
+
+  if (currentYear - formikYear >= 60 && body) {
+    body.style.fontSize = "2em";
+  } else if (body) body.style.fontSize = "1em";
 
   return (
     <form
