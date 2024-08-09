@@ -44,7 +44,7 @@ Navigate to the project directory:
 cd ..
 ```
 
-Navigate to the server directory:
+Navigate to the client directory:
 
 ```
 cd client
